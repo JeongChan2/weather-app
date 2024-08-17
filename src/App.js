@@ -25,11 +25,9 @@ function App() {
     try {
       
       let url = ``;
-      if(country){
-        url = `https://api.openweathermap.org/data/2.5/weather?q=${country}&appid=${APIKEY}&units=metric`;
-      } else {
-        url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${APIKEY}&units=metric`;
-      }
+      url = country?`https://api.openweathermap.org/data/2.5/weather?q=${country}&appid=${APIKEY}&units=metric`:
+      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${APIKEY}&units=metric`;
+      
       let response = await fetch(url);
       let data = await response.json();
       setWeather(data);
