@@ -5,7 +5,7 @@ const WeatherBox = ({weather}) => {
   return (
     <div className='weather-box'>
       <div>{weather?.name}</div>
-      <h2>{weather?.main.temp}C / { 9/5*weather?.main.temp + 32}</h2>
+      <h2>{weather?.main.temp}C / { (9/5*weather?.main.temp + 32).toFixed(2)}F</h2>
       <h3>{weather?.weather[0].description}</h3>
     </div>
   )

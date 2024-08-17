@@ -17,14 +17,26 @@ function App() {
 
   /**
    * 현재 위치의 날씨 정보 저장
+   * @param {string} country 나라
    * @param {string} lat 위도
    * @param {string} lon 경도
    */
-  const setCurrentLocationWeather = async (lat, lon) => {
-    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${APIKEY}&units=metric`;
-    let response = await fetch(url);
-    let data = await response.json();
-    setWeather(data);
+  const setCurrentWeather = async (country = null, lat = null, lon = null) => {
+    try {
+      
+      let url = ``;
+      if(country){
+        url = `https://api.openweathermap.org/data/2.5/weather?q=${country}&appid=${APIKEY}&units=metric`;
+      } else {
+        url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${APIKEY}&units=metric`;
+      }
+      let response = await fetch(url);
+      let data = await response.json();
+      setWeather(data);
+
+    } catch(error) {
+      console.error("Error:", error);
+    }
   };
 
   /**
@@ -34,10 +46,13 @@ function App() {
     navigator.geolocation.getCurrentPosition((position) => {
       const lat = position.coords.latitude;
       const lon = position.coords.longitude;
-      setCurrentLocationWeather(lat, lon);
+      setCurrentWeather(null, lat, lon);
     });
   }, []);
 
+  /**
+   * componentDidMount
+   */
   useEffect(() => {
     if (navigator.geolocation) {
       getCurrentLocationWeather();
@@ -50,7 +65,7 @@ function App() {
     <div>
       <div className="container">
         <WeatherBox weather={weather} />
-        <WeatherButtons />
+        <WeatherButtons setCurrentWeather={setCurrentWeather} getCurrentLocationWeather={getCurrentLocationWeather}/>
       </div>
     </div>
   );
