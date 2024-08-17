@@ -1,6 +1,8 @@
-import { useEffect, useState, useCallback } from 'react';
-import './App.css';
-import WeatherBox from './component/WeatherBox';
+import { useEffect, useState, useCallback } from "react";
+import "./App.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import WeatherBox from "./component/WeatherBox";
+import WeatherButtons from "./component/WeatherButtons";
 
 const APIKEY = "879daacd42e34fcb2b42379bd9748475";
 
@@ -10,38 +12,46 @@ const APIKEY = "879daacd42e34fcb2b42379bd9748475";
 // 유저는 데이터가 로딩될 때 로딩 스피너를 볼 수 있다.
 
 function App() {
+  // 날씨 정보 저장
+  const [weather, setWeather] = useState(null);
 
-  const getCurrentLocation = useCallback(() => {
+  /**
+   * 현재 위치의 날씨 정보 저장
+   * @param {string} lat 위도
+   * @param {string} lon 경도
+   */
+  const setCurrentLocationWeather = async (lat, lon) => {
+    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${APIKEY}&units=metric`;
+    let response = await fetch(url);
+    let data = await response.json();
+    setWeather(data);
+  };
+
+  /**
+   * 현재 위치의 날씨 정보 호출
+   */
+  const getCurrentLocationWeather = useCallback(() => {
     navigator.geolocation.getCurrentPosition((position) => {
       const lat = position.coords.latitude;
       const lon = position.coords.longitude;
-      getWeatherByCurrentLocation(lat,lon);
-
-      
+      setCurrentLocationWeather(lat, lon);
     });
   }, []);
 
   useEffect(() => {
     if (navigator.geolocation) {
-      getCurrentLocation();
+      getCurrentLocationWeather();
     } else {
       console.log("Geolocation is not supported by this browser.");
     }
-    
-  }, [getCurrentLocation])
-
-  
-
-  const getWeatherByCurrentLocation = async(lat, lon) => {
-    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${APIKEY}`;
-    let response = await fetch(url)
-    let data = await response.json();
-    console.log("data", data);
-  }
+  }, [getCurrentLocationWeather]);
 
   return (
     <div>
-      <WeatherBox/>
+      <div className="container">
+        <WeatherBox weather={weather} />
+        <WeatherButtons />
+      </div>
     </div>
   );
 }
