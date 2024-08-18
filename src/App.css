@@ -19,3 +19,7 @@ body {
   border-radius: 30px;
   background-color: azure;
 }
+
+.city-button {
+  margin: 2px;
+}

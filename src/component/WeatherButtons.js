@@ -1,12 +1,15 @@
 import React from 'react'
 import { Button } from 'react-bootstrap';
 
-const WeatherButtons = ({setCurrentWeather, getCurrentLocationWeather}) => {
+const WeatherButtons = ({getCurrentWeather, getCurrentLocationWeather, cities, selectedCity}) => {
   return (
     <div>
-      <Button variant="warning" onClick={() => getCurrentLocationWeather()}>Current Location</Button>
-      <Button variant="warning" onClick={() => setCurrentWeather("Paris")}>Paris</Button>
-      <Button variant="warning" onClick={() => setCurrentWeather("New York")}>New York</Button>
+      <Button className='city-button' variant={`${selectedCity === null ? "outline-warning" : "warning"}`} onClick={() => getCurrentLocationWeather()}>Current Location</Button>
+      
+
+      {cities.map((city) => (
+        <Button className='city-button' variant={`${selectedCity === city ? "outline-warning" : "warning"}`} onClick={() => getCurrentWeather(city)}>{city}</Button>
+      ))}
     </div>
   )
 }
